@@ -6,29 +6,34 @@ export async function generateColdEmail(prompt) {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama3-70b-8192', 
+        model: 'llama3-70b-8192',
         messages: [
           {
             role: 'system',
-            content: 'You are ColdMail Genius, an expert in writing short, high-converting cold emails based on job descriptions.'
+            content: 'You are ColdMail Genius, an expert in writing short, high-converting cold emails based on job descriptions.',
           },
           {
             role: 'user',
-            content: prompt
-          }
+            content: prompt,
+          },
         ],
         temperature: 0.7,
-        max_tokens: 500
-      })
+        max_tokens: 500,
+      }),
     });
 
     const data = await response.json();
 
+    if (!response.ok) {
+      console.error('Groq API error response:', data);
+      throw new Error(data?.error?.message || 'Groq API request failed');
+    }
+
     if (!data?.choices?.[0]?.message?.content) {
-      console.error('Groq API raw response:', data);
+      console.error('Invalid Groq response format:', data);
       throw new Error('Invalid response structure from Groq API');
     }
 
