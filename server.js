@@ -7,13 +7,11 @@ dotenv.config();
 
 const app = express();
 
-// Allowed frontend origins
 const allowedOrigins = [
   'http://localhost:3000',
   'https://cold-email-ai-agent-frontend.vercel.app',
 ];
 
-// CORS middleware setup
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
